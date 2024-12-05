@@ -36,3 +36,12 @@ interface Event {
   venue: string;
 }
 
+interface ExpandedFight extends Fight {
+  expand: {
+    blueCorner: Fighter;
+    redCorner: Fighter;
+    event: Event;
+  }
+}
+
+
