@@ -13,7 +13,7 @@ export default function Header() {
       <div className="flex flex-row h-14 items-center justify-between w-full">
         <div className="mr-4 flex gap-4 flex-1 items-center ">
           <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            <Image
+            <img
               src="/nlc-small-logo.avif"
               alt="Home"
               width={100}
