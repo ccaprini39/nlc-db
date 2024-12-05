@@ -26,10 +26,10 @@ export default function Header() {
             Events
             <span className="sr-only">Events</span>
           </Link>
-          <Link href="/fighters" className="transition-colors hover:text-foreground/80 text-foreground/60">
+          {/* <Link href="/fighters" className="transition-colors hover:text-foreground/80 text-foreground/60">
             Fighters
             <span className="sr-only">Fighters</span>
-          </Link>
+          </Link> */}
         </div>
         <nav className="flex items-center space-x-4 md:space-x-6 text-sm font-medium">
           <div className="w-full flex-1 md:w-auto md:flex-none">
