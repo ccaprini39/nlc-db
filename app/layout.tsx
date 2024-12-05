@@ -31,10 +31,8 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className='max-w-7xl mx-auto min-h-screen flex flex-col h-full'>
-            <div className='flex-shrink-0'>
-              <Header />
-            </div>
             <div className='flex-1 min-h-full bg-[url("/nlc-background.jpg")] bg-cover bg-center bg-no-repeat'>
+              <Header />
               {children}
             </div>
           </div>

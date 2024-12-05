@@ -35,6 +35,7 @@ interface Event {
   date: string;
   location: string;
   venue: string;
+  poster: string; //contains the url to the poster image
 }
 
 interface ExpandedFight extends Fight {
