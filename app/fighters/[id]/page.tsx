@@ -34,6 +34,7 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
         {
           filter: `redCorner = "${fighter.id}" || blueCorner = "${fighter.id}"`,
           expand: 'redCorner,blueCorner,event',
+          sort: '-date',
           requestKey: null
         }
       )
@@ -103,6 +104,7 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
         <TableHeader>
           <TableRow className='hover:bg-transparent'>
             <TableHead>Result</TableHead>
+            <TableHead></TableHead>
             <TableHead>Opponent</TableHead>
             <TableHead>Event</TableHead>
             <TableHead>Date</TableHead>
@@ -133,6 +135,7 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
     return (
       <TableRow className={backgroundColor}>
         <TableCell>{result}</TableCell>
+        <TableCell>{fight.type}</TableCell>
         <TableCell>
           <Link href={`/fighters/${opponentId}`}>{opponent}</Link>
         </TableCell>

@@ -23,6 +23,7 @@ interface Fight {
   method?: string; //this is for the method of the fight end, if its a KO, TKO, Submission, Decision, etc.  
   round?: string;
   time?: string;
+  type?: string; //this is for the type of fight, if its a title fight, non-title fight, etc.
   winner?: string; //this is a fighter id.  Null if draw.
   loser?: string; //this is a fighter id.  Null if draw.
   event: string; //this is an event id

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import PocketBase from 'pocketbase'
+import Link from 'next/link'
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([])
@@ -23,8 +24,16 @@ export default function EventsPage() {
 
   return (
     <div>
-      { loading ? <div>Loading...</div> : 
-        <div>{events.map((event) => <div key={event.id}>{event.name}</div>)}</div>
+      {loading ? <div>Loading...</div> :
+        <div className='flex flex-col gap-4'>
+          {events.map((event) => {
+            return (
+              <Link href={`/events/${event.id}`} key={event.id}>
+                {event.name}
+              </Link>
+            )
+          })}
+        </div>
       }
     </div>
 
