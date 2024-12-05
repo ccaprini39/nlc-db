@@ -7,17 +7,18 @@ import Pocketbase from 'pocketbase'
 import { useEffect, useState } from 'react'
 
 export default function Header() {
-
+  const headerImageUrl = 'https://nlc-db.pockethost.io/api/files/images/mnw5kh5v5ffwnxu/nlc_r1_tr_03_iEkl0bDpkS.avif'
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex flex-row h-14 items-center justify-between w-full">
         <div className="mr-4 flex gap-4 flex-1 items-center ">
           <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            <img
-              src="/nlc-small-logo.avif"
+            <Image
+              src={headerImageUrl}
               alt="Home"
               width={100}
               height={100}
+              priority
             />
             <span className="sr-only">Home</span>
           </Link>
