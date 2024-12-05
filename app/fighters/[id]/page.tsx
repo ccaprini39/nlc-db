@@ -16,6 +16,8 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/app/components/ui/dialog'
 import { BsYoutube } from "react-icons/bs";
 import { Button } from '@/app/components/ui/button'
+import Link from 'next/link'
+import { Separator } from '@/app/components/ui/separator'
 
 const pb = new Pocketbase('https://nlc-db.pockethost.io')
 
@@ -47,9 +49,9 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
 
 
   return (
-    <div className='p-4 h-full w-full bg-[url("/nlc-background.jpg")] bg-cover bg-center bg-no-repeat'>
+    <div className='flex-1 p-4 h-full w-full min-h-[100%]'>
       {loading ? <p className='h-full w-full flex items-center justify-center'>Loading...</p> :
-        <>
+        <div className='flex flex-col gap-4 h-full'>
           <div className='flex flex-row gap-4 justify-center'>
             <Image
               src={`https://nlc-db.pockethost.io/api/files/fighters/${fighter?.id}/${fighter?.profilePic}`}
@@ -69,8 +71,9 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
               {fighter?.hometown && <p>Hometown: {fighter?.hometown}</p>}
             </div>
           </div>
+          <Separator />
           <NlcRecord fights={fights} fighterId={fighter?.id || ''} />
-          <div className='flex flex-col gap-4'>
+          {/* <div className='flex flex-col gap-4'>
             {fights.length > 0 && <p>Fights</p>}
             {fights.map((fight: Fight, index: number) => (
               <iframe src={`${fight?.youtubeUrl}`}
@@ -83,8 +86,8 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
                 allowFullScreen
               />
             ))}
-          </div>
-        </>
+          </div> */}
+        </div>
       }
     </div>
   )
@@ -94,27 +97,33 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
 function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: string }) {
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className='hover:bg-transparent'>
-          <TableHead>Result</TableHead>
-          <TableHead>Opponent</TableHead>
-          <TableHead>Event</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Method</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {fights.map((fight: ExpandedFight, index: number) => (
-          <FightTableRow fight={fight} key={index} />
-        ))}
-      </TableBody>
-    </Table>
+    <div className='flex-1'>
+      <p className='text-2xl font-bold'>NLC Fight Record</p>
+      <Table>
+        <TableHeader>
+          <TableRow className='hover:bg-transparent'>
+            <TableHead>Result</TableHead>
+            <TableHead>Opponent</TableHead>
+            <TableHead>Event</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Method</TableHead>
+            <TableHead>Watch</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {fights.map((fight: ExpandedFight, index: number) => (
+            <FightTableRow fight={fight} key={index} />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 
   function FightTableRow({ fight }: { fight: ExpandedFight }) {
     const opponent = fight.redCorner === fighterId ? fight.expand.blueCorner.name : fight.expand.redCorner.name
+    const opponentId = fight.redCorner === fighterId ? fight.expand.blueCorner.id : fight.expand.redCorner.id
     const event = fight.expand.event.name
+    const eventId = fight.expand.event.id
     const date = fight.expand.event.date
     const result = fight.winner === fighterId ? 'Win' : 'Loss'
     const method = fight.method
@@ -124,10 +133,17 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
     return (
       <TableRow className={backgroundColor}>
         <TableCell>{result}</TableCell>
-        <TableCell>{opponent}</TableCell>
-        <TableCell>{event}</TableCell>
+        <TableCell>
+          <Link href={`/fighters/${opponentId}`}>{opponent}</Link>
+        </TableCell>
+        <TableCell>
+          <Link href={`/events/${eventId}`}>{event}</Link>
+        </TableCell>
         <TableCell>{formatDate(date)}</TableCell>
         <TableCell>{fightOutcome}</TableCell>
+        <TableCell>
+          <YoutubeEmbedDialog url={fight.youtubeUrl} />
+        </TableCell>
       </TableRow>
     )
   }
@@ -149,8 +165,16 @@ function YoutubeEmbedDialog({ url }: { url: string }) {
         <DialogHeader>
           <DialogTitle>Watch Fight</DialogTitle>
         </DialogHeader>
-        <div className='w-full h-full'>
-          <iframe src={url} className='w-full h-full' title='Youtube Embed' frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+        <div className='w-full h-full min-h-[600px]'>
+          <iframe
+            src={url}
+            className='w-full h-full'
+            title='Youtube Embed'
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
         </div>
       </DialogContent>
     </Dialog>

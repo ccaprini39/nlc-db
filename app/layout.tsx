@@ -27,11 +27,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-7xl mx-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Header />
-          {children}
+          <div className='max-w-7xl mx-auto min-h-screen flex flex-col h-full'>
+            <div className='flex-shrink-0'>
+              <Header />
+            </div>
+            <div className='flex-1 min-h-full bg-[url("/nlc-background.jpg")] bg-cover bg-center bg-no-repeat'>
+              {children}
+            </div>
+          </div>
         </ThemeProvider>
       </body>
     </html>
