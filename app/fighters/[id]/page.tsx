@@ -96,7 +96,7 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className='hover:bg-transparent'>
           <TableHead>Result</TableHead>
           <TableHead>Opponent</TableHead>
           <TableHead>Event</TableHead>
