@@ -6,8 +6,13 @@ import Link from 'next/link'
 import { CardContent, Card, CardDescription, CardTitle, CardHeader } from '@/app/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar'
 import Image from 'next/image'
-import { Badge } from '../components/ui/badge'
-import { ScrollArea } from '../components/ui/scroll-area'
+import { Badge } from '@/app/components/ui/badge'
+import { ScrollArea } from '@/app/components/ui/scroll-area'
+import { DialogTrigger } from '@/app/components/ui/dialog'
+import { Dialog, DialogTitle, DialogContent, DialogHeader } from '@/app/components/ui/dialog'
+import { BsYoutube } from 'react-icons/bs'
+import { Button } from '@/app/components/ui/button'
+import { Table, TableHead, TableBody, TableRow, TableCell } from '@/app/components/ui/table'
 
 const pb = new PocketBase('https://nlc-db.pockethost.io')
 
@@ -74,21 +79,25 @@ function EventCard({ event }: { event: Event }) {
         <CardDescription>{event.date}</CardDescription>
       </CardHeader>
       <CardContent className='flex justify-center gap-4 h-[500px]'>
-        <Image 
-          src={posterUrl} 
-          alt={event.name} 
-          width={400} 
-          height={500} 
+        <Image
+          className='w-1/3'
+          src={posterUrl}
+          alt={event.name}
+          width={400}
+          height={500}
         />
-        <ScrollArea className='flex flex-col gap-4 max-h-[500px]'>
-          <div className='text-xl w-full text-center'>Fight Card</div>
-          {loading ? <div>Loading...</div> :
-            fights.map((fight) => {
-              return (
-                <RenderFight fight={fight} key={fight.id} />
-              )
-            })
-          }
+        <ScrollArea className='flex flex-col w-2/3 gap-4 max-h-[500px]'>
+          <div className='text-2xl opacity-70 w-full'>Fight Card</div>
+          {loading ? <div>Loading Fight Card...</div> :
+            <Table>
+              <TableBody>
+                {fights.map((fight) => {
+                  return (
+                    <RenderFight fight={fight} key={fight.id} />
+                  )
+                })}
+              </TableBody>
+            </Table>}
         </ScrollArea>
       </CardContent>
     </Card>
@@ -101,24 +110,40 @@ function RenderFight({ fight }: { fight: ExpandedFight }) {
   const redCornerAvatarUrl = `https://nlc-db.pockethost.io/api/files/fighters/${redCorner.id}/${redCorner.profilePic}`
   const blueCornerAvatarUrl = `https://nlc-db.pockethost.io/api/files/fighters/${blueCorner.id}/${blueCorner.profilePic}`
   const winner = fight.winner
+  const youtubeUrl = fight.youtubeUrl //TODO: add the youtube dialog
+  return (
+    <TableRow>
+      <TableCell>
+        <Link href={`/fighters/${redCorner.id}`}>
+          <div>{redCorner.name} {winner === redCorner.id ? <WinnerBadge /> : null}</div>
+        </Link>
+      </TableCell>
+      <TableCell>
+        <div className='text-xl opacity-50'>vs</div>
+      </TableCell>
+      <TableCell className='text-right'>
+        <Link href={`/fighters/${blueCorner.id}`}>
+          <div>{winner === blueCorner.id ? <WinnerBadge /> : null} {blueCorner.name}</div>
+        </Link>
+      </TableCell>
+      <TableCell>
+        <YoutubeEmbedDialog url={youtubeUrl} />
+      </TableCell>
+    </TableRow>
+  )
   return (
     <div className='flex flex-col gap-4 w-full outline outline-1 outline-gray-700 rounded-md p-1 bg-gray-900'>
-      <div className='flex w-full flex-row gap-4 items-center justify-between'>
-        <Link href={`/fighters/${redCorner.id}`} className='flex flex-row gap-4 items-center'>
-          <Avatar>
-            <AvatarImage src={redCornerAvatarUrl} alt={redCorner.name} />
-            <AvatarFallback>{redCorner.name.charAt(0)}</AvatarFallback>
-          </Avatar>
+      <div className='flex w-full flex-row items-center justify-around'>
+        <Link href={`/fighters/${redCorner.id}`}>
           <div>{redCorner.name} {winner === redCorner.id ? <WinnerBadge /> : null}</div>
         </Link>
         <div className='text-xl opacity-50'>vs</div>
-        <Link href={`/fighters/${blueCorner.id}`} className='flex flex-row gap-4 items-center'>
-          <div>{blueCorner.name} {winner === blueCorner.id ? <WinnerBadge /> : null}</div>
-          <Avatar>
-            <AvatarImage src={blueCornerAvatarUrl} alt={blueCorner.name} />
-            <AvatarFallback>{blueCorner.name.charAt(0)}</AvatarFallback>
-          </Avatar>
+        <Link href={`/fighters/${blueCorner.id}`}>
+          <div>{winner === blueCorner.id ? <WinnerBadge /> : null} {blueCorner.name}</div>
         </Link>
+        <div className='flex'>
+          <YoutubeEmbedDialog url={youtubeUrl} />
+        </div>
       </div>
     </div>
   )
@@ -129,6 +154,35 @@ function RenderFight({ fight }: { fight: ExpandedFight }) {
       </Badge>
     )
   }
+}
+
+function YoutubeEmbedDialog({ url }: { url: string }) {
+  if (!url || url === '') return <div className='text-red-500'></div>
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant='ghost'>
+          <BsYoutube />
+        </Button>
+      </DialogTrigger>
+      <DialogContent >
+        <DialogHeader>
+          <DialogTitle>Watch Fight</DialogTitle>
+        </DialogHeader>
+        <div className='w-full h-full min-h-[600px]'>
+          <iframe
+            src={url}
+            className='w-full h-full'
+            title='Youtube Embed'
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 

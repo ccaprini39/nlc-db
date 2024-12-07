@@ -187,7 +187,7 @@ function AddFightForm() {
   const [blueCornerId, setBlueCornerId] = useState('')
   const [winnerId, setWinnerId] = useState('')
   const [loserId, setLoserId] = useState('')
-  const [youtubeUrl, setYoutubeUrl] = useState('')
+  const [youtubeUrl, setYoutubeUrl] = useState('https://www.youtube.com/embed/')
   const [method, setMethod] = useState('')
   const [round, setRound] = useState('')
   const [time, setTime] = useState('')

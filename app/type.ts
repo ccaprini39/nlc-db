@@ -12,6 +12,7 @@ interface Fighter {
   hometown: string;
   gym: string;
   profilePic: string;
+  mainPic: string;
 }
 
 interface Fight {

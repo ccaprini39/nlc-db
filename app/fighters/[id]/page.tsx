@@ -48,8 +48,8 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
   const age = new Date().getFullYear() - new Date(fighter?.dob || '').getFullYear()
   const readableDob = new Date(fighter?.dob || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-  const profilePicUrl = fighter?.profilePic ?
-    `https://nlc-db.pockethost.io/api/files/fighters/${fighter?.id}/${fighter?.profilePic}`
+  const profilePicUrl = fighter?.mainPic ?
+    `https://nlc-db.pockethost.io/api/files/fighters/${fighter?.id}/${fighter?.mainPic}`
     :
     'https://nlc-db.pockethost.io/api/files/images/sr7yugn0nuk4td9/generic_cBSufze9Du.avif'
 
@@ -59,13 +59,14 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
     <div className='flex-1 p-4 h-full w-full min-h-[100%]'>
       {loading ? <p className='h-full w-full flex items-center justify-center'>Loading...</p> :
         <div className='flex flex-col gap-4 h-full'>
-          <div className='flex flex-row gap-4 justify-center'>
+          <div className='flex flex-row gap-4 justify-center h-[50vh] w-full'>
             <Image
               src={profilePicUrl}
               //src={`/NLC-small-logo.avif`}
               alt={fighter?.name || ''}
-              width={500}
               height={500}
+              width={900}
+              quality={100}
               className='rounded-3xl'
               onError={(e) => {
                 e.currentTarget.src = '/NLC-small-logo.avif'
