@@ -19,7 +19,6 @@ interface Fight {
   redCorner: string; //this is a fighter id
   blueCorner: string; //this is a fighter id
   youtubeUrl: string;
-  date: string;
   method?: string; //this is for the method of the fight end, if its a KO, TKO, Submission, Decision, etc.  
   round?: string;
   time?: string;

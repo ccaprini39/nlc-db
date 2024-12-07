@@ -18,7 +18,7 @@ import { BsYoutube } from "react-icons/bs";
 import { Button } from '@/app/components/ui/button'
 import Link from 'next/link'
 import { Separator } from '@/app/components/ui/separator'
-
+import { ScrollArea } from '@/app/components/ui/scroll-area'
 const pb = new Pocketbase('https://nlc-db.pockethost.io')
 
 export default function FighterPage({ params }: { params: Promise<{ id: string }> }) {
@@ -34,7 +34,7 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
         {
           filter: `redCorner = "${fighter.id}" || blueCorner = "${fighter.id}"`,
           expand: 'redCorner,blueCorner,event',
-          sort: '-date',
+          sort: '-event.date',
           requestKey: null
         }
       )
@@ -48,6 +48,12 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
   const age = new Date().getFullYear() - new Date(fighter?.dob || '').getFullYear()
   const readableDob = new Date(fighter?.dob || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
+  const profilePicUrl = fighter?.profilePic ?
+    `https://nlc-db.pockethost.io/api/files/fighters/${fighter?.id}/${fighter?.profilePic}`
+    :
+    'https://nlc-db.pockethost.io/api/files/images/sr7yugn0nuk4td9/generic_cBSufze9Du.avif'
+
+
 
   return (
     <div className='flex-1 p-4 h-full w-full min-h-[100%]'>
@@ -55,21 +61,25 @@ export default function FighterPage({ params }: { params: Promise<{ id: string }
         <div className='flex flex-col gap-4 h-full'>
           <div className='flex flex-row gap-4 justify-center'>
             <Image
-              src={`https://nlc-db.pockethost.io/api/files/fighters/${fighter?.id}/${fighter?.profilePic}`}
+              src={profilePicUrl}
               //src={`/NLC-small-logo.avif`}
               alt={fighter?.name || ''}
               width={500}
               height={500}
               className='rounded-3xl'
+              onError={(e) => {
+                e.currentTarget.src = '/NLC-small-logo.avif'
+              }}
             />
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-1'>
               <p className='text-2xl font-bold'>{fighter?.name}</p>
-              <p>Height: {fighter?.height}</p>
-              <p>Weight: {fighter?.weight}</p>
-              {fighter?.dob && <p>Age: {age}</p>}
-              {fighter?.dob && <p>DOB: {readableDob}</p>}
-              {fighter?.gym && <p>Representing: {fighter?.gym}</p>}
-              {fighter?.hometown && <p>Hometown: {fighter?.hometown}</p>}
+              <p><span className='opacity-70'>Height:</span> {fighter?.height}</p>
+              <p><span className='opacity-70'>Weight:</span> {fighter?.weight}</p>
+              {fighter?.dob && <p><span className='opacity-70'>Age:</span> {age}</p>}
+              {fighter?.dob && <p><span className='opacity-70'>DOB:</span> {readableDob}</p>}
+              {fighter?.gym && <p><span className='opacity-70'>Representing:</span> {fighter?.gym}</p>}
+              {fighter?.hometown && <p><span className='opacity-70'>Hometown:</span> {fighter?.hometown}</p>}
+              {fighter?.bio && <div className='min-h-[300px] overflow-y-auto' dangerouslySetInnerHTML={{ __html: fighter?.bio }} />}
             </div>
           </div>
           <Separator />
@@ -145,7 +155,7 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
         <TableCell>{formatDate(date)}</TableCell>
         <TableCell>{fightOutcome}</TableCell>
         <TableCell>
-          <YoutubeEmbedDialog url={fight.youtubeUrl} />
+          <YoutubeEmbedDialog url={fight.youtubeUrl || ''} />
         </TableCell>
       </TableRow>
     )
@@ -157,6 +167,7 @@ function formatDate(date: string) {
 }
 
 function YoutubeEmbedDialog({ url }: { url: string }) {
+  if (!url || url === '') return <div className='text-red-500'>x</div>
   return (
     <Dialog>
       <DialogTrigger asChild>

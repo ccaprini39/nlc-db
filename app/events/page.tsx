@@ -7,6 +7,7 @@ import { CardContent, Card, CardDescription, CardTitle, CardHeader } from '@/app
 import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar'
 import Image from 'next/image'
 import { Badge } from '../components/ui/badge'
+import { ScrollArea } from '../components/ui/scroll-area'
 
 const pb = new PocketBase('https://nlc-db.pockethost.io')
 
@@ -62,16 +63,25 @@ function EventCard({ event }: { event: Event }) {
   useEffect(() => {
     fetchEvent()
   }, [])
-  const posterUrl = `https://nlc-db.pockethost.io/api/files/events/${event.id}/${event.poster}`
+  const posterUrl = event.poster ?
+    `https://nlc-db.pockethost.io/api/files/events/${event.id}/${event.poster}`
+    :
+    'https://nlc-db.pockethost.io/api/files/images/2xvlpftcdqxg76t/new_line_cagefighting_logo_OJDqq6P5hM.png'
   return (
     <Card className='w-full'>
       <CardHeader>
-        <CardTitle>{event.name}</CardTitle>
+        <CardTitle className='text-2xl'>{event.name}</CardTitle>
         <CardDescription>{event.date}</CardDescription>
       </CardHeader>
-      <CardContent className='flex justify-center gap-4'>
-        <Image src={posterUrl} alt={event.name} width={300} height={400} />
-        <div className='flex flex-col gap-4'>
+      <CardContent className='flex justify-center gap-4 h-[500px]'>
+        <Image 
+          src={posterUrl} 
+          alt={event.name} 
+          width={400} 
+          height={500} 
+        />
+        <ScrollArea className='flex flex-col gap-4 max-h-[500px]'>
+          <div className='text-xl w-full text-center'>Fight Card</div>
           {loading ? <div>Loading...</div> :
             fights.map((fight) => {
               return (
@@ -79,7 +89,7 @@ function EventCard({ event }: { event: Event }) {
               )
             })
           }
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   )
@@ -93,20 +103,20 @@ function RenderFight({ fight }: { fight: ExpandedFight }) {
   const winner = fight.winner
   return (
     <div className='flex flex-col gap-4 w-full outline outline-1 outline-gray-700 rounded-md p-1 bg-gray-900'>
-      <div className='flex w-full flex-row gap-4 items-center justify-evenly'>
+      <div className='flex w-full flex-row gap-4 items-center justify-between'>
         <Link href={`/fighters/${redCorner.id}`} className='flex flex-row gap-4 items-center'>
           <Avatar>
             <AvatarImage src={redCornerAvatarUrl} alt={redCorner.name} />
-            <AvatarFallback>{redCorner.name}</AvatarFallback>
+            <AvatarFallback>{redCorner.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <p>{redCorner.name} {winner === redCorner.id ? <WinnerBadge /> : null}</p>
+          <div>{redCorner.name} {winner === redCorner.id ? <WinnerBadge /> : null}</div>
         </Link>
         <div className='text-xl opacity-50'>vs</div>
         <Link href={`/fighters/${blueCorner.id}`} className='flex flex-row gap-4 items-center'>
-          <p>{blueCorner.name} {winner === blueCorner.id ? <WinnerBadge /> : null}</p>
+          <div>{blueCorner.name} {winner === blueCorner.id ? <WinnerBadge /> : null}</div>
           <Avatar>
             <AvatarImage src={blueCornerAvatarUrl} alt={blueCorner.name} />
-            <AvatarFallback>{blueCorner.name}</AvatarFallback>
+            <AvatarFallback>{blueCorner.name.charAt(0)}</AvatarFallback>
           </Avatar>
         </Link>
       </div>
