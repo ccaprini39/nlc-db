@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import PocketBase from 'pocketbase'
 import Link from 'next/link'
 import { CardContent, Card, CardDescription, CardTitle, CardHeader } from '@/app/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar'
 import Image from 'next/image'
 import { Badge } from '@/app/components/ui/badge'
 import { ScrollArea } from '@/app/components/ui/scroll-area'
@@ -73,21 +72,21 @@ function EventCard({ event }: { event: Event }) {
     :
     'https://nlc-db.pockethost.io/api/files/images/2xvlpftcdqxg76t/new_line_cagefighting_logo_OJDqq6P5hM.png'
   return (
-    <Card className='w-full'>
+    <Card className='w-full lg:h-[600px] h-[800px]'>
       <CardHeader>
         <CardTitle className='text-2xl'>{event.name}</CardTitle>
         <CardDescription>{event.date}</CardDescription>
       </CardHeader>
-      <CardContent className='flex justify-center gap-4 h-[500px]'>
+      <CardContent className='flex lg:flex-row flex-col gap-4'>
         <Image
-          className='w-1/3'
+          className='lg:w-1/3 w-full object-contain max-h-[400px]'
           src={posterUrl}
           alt={event.name}
           width={400}
           height={500}
         />
-        <ScrollArea className='flex flex-col w-2/3 gap-4 max-h-[500px]'>
-          <div className='text-2xl opacity-70 w-full'>Fight Card</div>
+        <ScrollArea className='lg:w-2/3 lg:h-[400px] w-full h-[250px]'>
+          <div className='text-2xl opacity-70 mb-4'>Fight Card</div>
           {loading ? <div>Loading Fight Card...</div> :
             <Table>
               <TableBody>
