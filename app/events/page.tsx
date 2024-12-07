@@ -71,11 +71,13 @@ function EventCard({ event }: { event: Event }) {
     `https://nlc-db.pockethost.io/api/files/events/${event.id}/${event.poster}`
     :
     'https://nlc-db.pockethost.io/api/files/images/2xvlpftcdqxg76t/new_line_cagefighting_logo_OJDqq6P5hM.png'
+  
+  const readableDate = new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   return (
     <Card className='w-full lg:h-[600px] h-[800px]'>
       <CardHeader>
         <CardTitle className='text-2xl'>{event.name}</CardTitle>
-        <CardDescription>{event.date}</CardDescription>
+        <CardDescription>{readableDate}, {event.venue} in {event.location}</CardDescription>
       </CardHeader>
       <CardContent className='flex lg:flex-row flex-col gap-4'>
         <Image
