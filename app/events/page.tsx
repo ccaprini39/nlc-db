@@ -56,6 +56,7 @@ function EventCard({ event }: { event: Event }) {
       const fights = await pb.collection('fights').getFullList({
         filter: `event = "${event.id}"`,
         expand: 'redCorner,blueCorner',
+        sort: '-created',
         requestKey: null
       }) as unknown as ExpandedFight[]
       setFights(fights)
