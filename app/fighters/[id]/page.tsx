@@ -138,10 +138,14 @@ function NlcRecord({ fights, fighterId }: { fights: ExpandedFight[], fighterId: 
     const event = fight.expand.event.name
     const eventId = fight.expand.event.id
     const date = fight.expand.event.date
-    const result = fight.winner === fighterId ? 'Win' : 'Loss'
-    const method = fight.method
+    //if the fight is a draw or a no contest, then the winner and loser are null
+    //check if the method is a draw or no contest
+    const method = fight.method === 'Draw' || fight.method === 'No Contest' ? 'No Contest' : fight.method
+    let result = fight.winner === fighterId ? 'Win' : fight.loser === fighterId ? 'Loss' : 'Draw'
+    //if the method is a draw or no contest, then the result is the method
+    if (method === 'Draw' || method === 'No Contest') result = method
     const time = fight.time
-    const backgroundColor = fight.winner === fighterId ? 'bg-green-800 hover:bg-green-600' : 'bg-red-800 hover:bg-red-600'
+    const backgroundColor = fight.winner === fighterId ? 'bg-green-800 hover:bg-green-600' : fight.loser === fighterId ? 'bg-red-800 hover:bg-red-600' : 'bg-gray-800 hover:bg-gray-600'
     const fightOutcome = `${method}, (${time}) R${fight.round}`
     return (
       <TableRow className={backgroundColor}>
@@ -168,7 +172,7 @@ function formatDate(date: string) {
 }
 
 function YoutubeEmbedDialog({ url }: { url: string }) {
-  if (!url || url === '') return <div className='text-red-500'>x</div>
+  if (!url || url === '') return <div className='text-red-500'></div>
   return (
     <Dialog>
       <DialogTrigger asChild>

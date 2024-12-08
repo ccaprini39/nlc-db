@@ -162,8 +162,8 @@ function YoutubeEmbedDialog({ url }: { url: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='ghost'>
-          <BsYoutube />
+        <Button size='icon' variant='ghost'>
+          <BsYoutube className='text-red-500' />
         </Button>
       </DialogTrigger>
       <DialogContent >
